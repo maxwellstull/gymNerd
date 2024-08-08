@@ -1,92 +1,152 @@
-from nicegui import ui
+import pandas as pd
+from nicegui import ui, events
+from gym_nerd import GymNerd
 
+
+nerd = GymNerd()
+def update_table():
+    table.rows = nerd.filtered_df.to_dict("records")
+    print("updated!")
 
 with ui.row():
     with ui.column():
         with ui.row():
-            main = "Chest"
-            subA = "Clavical"
-            subB = "Sternal"
-            subC = "Abdominal"
+            main1 = "Chest"
+            sub1A = "Clavical"
+            sub1B = "Sternal"
+            sub1C = "Abdominal"
 
-            m1 = ui.checkbox(main)
-            subA1 = ui.checkbox(subA)
+            m1 = ui.checkbox(main1)
+            m1.on_value_change(lambda: [nerd.filter(main1), update_table()])
+            subA1 = ui.checkbox(sub1A)
             subA1.bind_enabled_from(m1, "value")
             subA1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subB1 = ui.checkbox(subB)
+            subB1 = ui.checkbox(sub1B)
             subB1.bind_enabled_from(m1, "value")
             subB1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subC1 = ui.checkbox(subC)
+            subC1 = ui.checkbox(sub1C)
             subC1.bind_enabled_from(m1, "value")
             subC1.bind_value_from(m1, "value", backward=lambda x: x & False)
         with ui.row():
-            main = "Arm"
-            subA = "Bicep"
-            subB = "Tricep"
-            subC = "Forearm"
+            main2 = "Arm"
+            sub2A = "Bicep"
+            sub2B = "Tricep"
+            sub2C = "Forearm"
 
-            m1 = ui.checkbox(main)
-            subA1 = ui.checkbox(subA)
-            subA1.bind_enabled_from(m1, "value")
-            subA1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subB1 = ui.checkbox(subB)
-            subB1.bind_enabled_from(m1, "value")
-            subB1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subC1 = ui.checkbox(subC)
-            subC1.bind_enabled_from(m1, "value")
-            subC1.bind_value_from(m1, "value", backward=lambda x: x & False)
+            m2 = ui.checkbox(main2)
+            subA2 = ui.checkbox(sub2A)
+            subA2.bind_enabled_from(m2, "value")
+            subA2.bind_value_from(m2, "value", backward=lambda x: x & False)
+            subB2 = ui.checkbox(sub2B)
+            subB2.bind_enabled_from(m2, "value")
+            subB2.bind_value_from(m2, "value", backward=lambda x: x & False)
+            subC2 = ui.checkbox(sub2C)
+            subC2.bind_enabled_from(m2, "value")
+            subC2.bind_value_from(m2, "value", backward=lambda x: x & False)
     with ui.column():
         with ui.row():
-            main = "Shoulder"
-            subA = "Anterior"
-            subB = "Lateral"
-            subC = "Posterior"
+            main3 = "Shoulder"
+            sub3A = "Anterior"
+            sub3B = "Lateral"
+            sub3C = "Posterior"
 
-            m1 = ui.checkbox(main)
-            subA1 = ui.checkbox(subA)
-            subA1.bind_enabled_from(m1, "value")
-            subA1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subB1 = ui.checkbox(subB)
-            subB1.bind_enabled_from(m1, "value")
-            subB1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subC1 = ui.checkbox(subC)
-            subC1.bind_enabled_from(m1, "value")
-            subC1.bind_value_from(m1, "value", backward=lambda x: x & False)
+            m3 = ui.checkbox(main3)
+            subA3 = ui.checkbox(sub3A)
+            subA3.bind_enabled_from(m3, "value")
+            subA3.bind_value_from(m3, "value", backward=lambda x: x & False)
+            subB3 = ui.checkbox(sub3B)
+            subB3.bind_enabled_from(m3, "value")
+            subB3.bind_value_from(m3, "value", backward=lambda x: x & False)
+            subC3 = ui.checkbox(sub3C)
+            subC3.bind_enabled_from(m3, "value")
+            subC3.bind_value_from(m3, "value", backward=lambda x: x & False)
         with ui.row():
-            main = "Core"
-            subA = "Abdominis"
-            subB = "Oblique"
-            subC = "Serratus"
+            main4 = "Core"
+            sub4A = "Abdominis"
+            sub4B = "Oblique"
+            sub4C = "Serratus"
 
-            m1 = ui.checkbox(main)
-            subA1 = ui.checkbox(subA)
-            subA1.bind_enabled_from(m1, "value")
-            subA1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subB1 = ui.checkbox(subB)
-            subB1.bind_enabled_from(m1, "value")
-            subB1.bind_value_from(m1, "value", backward=lambda x: x & False)
-            subC1 = ui.checkbox(subC)
-            subC1.bind_enabled_from(m1, "value")
-            subC1.bind_value_from(m1, "value", backward=lambda x: x & False)
+            m4 = ui.checkbox(main4)
+            subA4 = ui.checkbox(sub4A)
+            subA4.bind_enabled_from(m4, "value")
+            subA4.bind_value_from(m4, "value", backward=lambda x: x & False)
+            subB4 = ui.checkbox(sub4B)
+            subB4.bind_enabled_from(m4, "value")
+            subB4.bind_value_from(m4, "value", backward=lambda x: x & False)
+            subC4 = ui.checkbox(sub4C)
+            subC4.bind_enabled_from(m4, "value")
+            subC4.bind_value_from(m4, "value", backward=lambda x: x & False)
 
 
 
-"""
-with ui.row():
-    groups = ui.scroll_area().classes("w-32 h-64 border")
-    muscles = ui.scroll_area().classes("w-32 h-64 border")
+def save():
+    df = pd.DataFrame(table.rows)
+    nerd.df = df
+    nerd.save()
+def add_row():
+    table.add_rows({"Exercise":"","Groups":"","Muscles":"","Machine":"","Description":"","uid":max((dx['uid'] for dx in table.rows), default=-1) + 1})
+def rename(e : events.GenericEventArguments):
+    for row in table.rows:
+        if row['uid'] == e.args['uid']:
+            row.update(e.args)
+    table.update()
 
-    with groups:
-        chest = ui.checkbox("Chest")
+columns=[{"name":col,"label":col,"field":col} for col in nerd.columns_no_uid]
 
-    with muscles:
-        upper = ui.checkbox("upper", value=False)
-        upper.bind_visibility_from(chest,"value")
-        mid = ui.checkbox("mid", value=False)
-        mid.bind_visibility_from(chest,"value")
-        lower = ui.checkbox("lower", value=False)
-        lower.bind_visibility_from(chest,"value")
-"""
+table = ui.table(columns=columns, rows=nerd.df.to_dict("records"))
+table.add_slot('body', r'''
+    <q-tr :props="props">
+        <q-td key="Exercise" :props="props">
+            {{ props.row.Exercise }}
+            <q-popup-edit v-model="props.row.Exercise" v-slot="scope"
+                @update:model-value="() => $parent.$emit('rename', props.row)"
+            >
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+            </q-popup-edit>
+        </q-td>
+        </q-td>
+               <q-td key="Groups" :props="props">
+            {{ props.row.Groups }}
+            <q-popup-edit v-model="props.row.Groups" v-slot="scope"
+                @update:model-value="() => $parent.$emit('rename', props.row)"
+            >
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+            </q-popup-edit>
+        </q-td>
+
+        </q-td>
+               <q-td key="Muscles" :props="props">
+            {{ props.row.Muscles }}
+            <q-popup-edit v-model="props.row.Muscles" v-slot="scope"
+                @update:model-value="() => $parent.$emit('rename', props.row)"
+            >
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+            </q-popup-edit>
+        </q-td>
+               <q-td key="Machine" :props="props">
+            {{ props.row.Machine }}
+            <q-popup-edit v-model="props.row.Machine" v-slot="scope"
+                @update:model-value="() => $parent.$emit('rename', props.row)"
+            >
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+            </q-popup-edit>
+        </q-td>
+               <q-td key="Description" :props="props">
+            {{ props.row.Description }}
+            <q-popup-edit v-model="props.row.Description" v-slot="scope"
+                @update:model-value="() => $parent.$emit('rename', props.row)"
+            >
+                <q-input v-model="scope.value" dense autofocus @keyup.enter="scope.set" />
+            </q-popup-edit>
+        </q-td>
+    </q-tr>
+''')
+
+ui.button('add row', on_click=add_row)
+ui.button('save', on_click=save)
+
+table.on('rename',rename)
+
 
 
 ui.run()
