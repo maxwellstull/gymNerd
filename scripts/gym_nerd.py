@@ -23,20 +23,46 @@ class FilterTracker():
     def filter_flip_flop(self, keyword):
         if keyword in self.tier1.keys():
             self.tier1[keyword] = not(self.tier1[keyword])
+            # Disable all tier2s for this tier1 if it gets disabled
+            if self.tier1[keyword] == False:
+                for item in groupings[keyword]:
+                    self.tier2[item] = False
+
         if keyword in self.tier2.keys():
             self.tier2[keyword] = not(self.tier2[keyword])
     def get_tier1_filters(self):
         retval = []
-        for key, value in self.tier1:
+        for key, value in self.tier1.items():
             if value == True:
                 retval.append(key)
         return retval
     def get_tier2_filters(self):
         retval = []
-        for key, value in self.tier2:
+        for key, value in self.tier2.items():
             if value == True:
                 retval.append(key)
         return retval
+    def get_tier2s_for_tier1(self, tier1):
+        if(self.tier1[tier1] == True): #should always come true tbh
+            tier2 = groupings[tier1]
+            retval = []
+            all_false = True
+            for filter in tier2:
+                if self.tier2[filter] == True:
+                    all_false = False
+                    retval.append(filter)
+            if all_false == True:
+                return tier2
+            else:
+                return retval
+        else:
+            print("shit")
+    def all_filters_disabled(self):
+        if len(self.get_tier1_filters()) == 0:
+            if len(self.get_tier2_filters()) == 0:
+                return True
+        return False
+
 class GymNerd():
     def __init__(self):
         self.df = pd.read_csv("data/db.csv", header=0, quotechar="\"")
@@ -71,20 +97,30 @@ class GymNerd():
         else:
             return target
     def save(self):
-        self.df.to_csv("data/db2.csv",index=False)
+        self.df.to_csv("data/db.csv",index=False)
 
     def filter(self, keyword):
 
         self.filterer.filter_flip_flop(keyword)
 
-        keep = []
-        
-        for index, row in self.df.iterrows():
-            if thing in row["Groups"]:
-                keep.append(row)
-        self.filtered_df = pd.DataFrame(keep)
+        if self.filterer.all_filters_disabled() == True:
+            self.filtered_df = self.df
+        else:
 
-#        print(self.df["Chest, Shoulder" == self.df["Groups"]])
+            keep = []
+
+            
+            for filter in self.filterer.get_tier1_filters():
+                # Determine which/all tier 2s to keep
+                tier2s = self.filterer.get_tier2s_for_tier1(filter)
+                print(tier2s)
+                for filter2 in tier2s:
+                    for index, row in self.df.iterrows():
+                        if filter2 in row["Muscles"]:
+                            keep.append(row)
+            self.filtered_df = pd.DataFrame(keep)
+            self.filtered_df = self.filtered_df.drop_duplicates("uid")
+
 
 nerd = GymNerd()
 nerd.clean()
